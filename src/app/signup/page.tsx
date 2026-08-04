@@ -108,7 +108,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/20 relative overflow-hidden px-4 pt-28 pb-16">
+    <div className="min-h-[100dvh] flex items-center justify-center bg-muted/20 relative overflow-hidden px-4 pt-28 pb-16">
       {/* Ambient background glows */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-12 right-12 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
