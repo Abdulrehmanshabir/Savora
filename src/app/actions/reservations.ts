@@ -1,9 +1,10 @@
 'use server';
 
-import { adminDb } from '@/firebase/admin';
+import { getAdminServices } from '@/firebase/admin';
 
 export async function getAvailabilityForDate(date: string) {
   try {
+    const { adminDb } = await getAdminServices();
     const snap = await adminDb.collection('reservations').where('date', '==', date).get();
     
     const capacities: Record<string, number> = {};

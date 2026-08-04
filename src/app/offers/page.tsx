@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { adminDb } from '@/firebase/admin';
+import { getAdminServices } from '@/firebase/admin';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ export const revalidate = 0;
 
 async function getOffers() {
   try {
+    const { adminDb } = await getAdminServices();
     const offersSnap = await adminDb.collection('offers').where('isActive', '==', true).get();
     return offersSnap.docs.map(doc => serializeData({ id: doc.id, ...doc.data() }));
   } catch (error) {

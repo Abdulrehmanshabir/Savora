@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, Star, ChefHat, Clock, Utensils } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { FoodCard } from '@/components/food/FoodCard';
-import { adminDb } from '@/firebase/admin';
+import { getAdminServices } from '@/firebase/admin';
 import { cn, serializeData } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -11,6 +11,7 @@ export const revalidate = 0; // disabled temporarily for dev
 
 async function getHomePageData() {
   try {
+    const { adminDb } = await getAdminServices();
     const [popularFoodsSnap, categoriesSnap, offersSnap] = await Promise.all([
       adminDb.collection('foods').where('isPopular', '==', true).limit(4).get(),
       adminDb.collection('categories').limit(4).get(),

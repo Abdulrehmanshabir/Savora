@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { ChevronLeft, Star, Clock, ChefHat, Info } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { adminDb } from '@/firebase/admin';
+import { getAdminServices } from '@/firebase/admin';
 import { cn } from '@/lib/utils';
 import { FoodDetailsInteractive } from '@/components/food/FoodDetailsInteractive';
 import { FoodReviews } from '@/components/food/FoodReviews';
@@ -14,6 +14,7 @@ export const revalidate = 3600;
 
 async function getFoodDetails(id: string) {
   try {
+    const { adminDb } = await getAdminServices();
     const docSnap = await adminDb.collection('foods').doc(id).get();
     if (!docSnap.exists) return null;
     return serializeData({ id: docSnap.id, ...docSnap.data() });
