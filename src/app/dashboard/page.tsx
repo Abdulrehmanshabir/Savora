@@ -200,22 +200,22 @@ function DashboardContent() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="flex flex-wrap h-auto w-full md:w-fit bg-muted/50 p-1.5 rounded-2xl mb-10 mx-auto md:mx-0">
             <TabsTrigger value="orders" className="flex-1 min-w-[110px] rounded-xl py-3 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
-              <ShoppingBag className="w-4 h-4 mr-2" /> Orders
+              <span className="flex items-center gap-1.5"><ShoppingBag className="w-4 h-4 shrink-0" /><span>Orders</span></span>
             </TabsTrigger>
             <TabsTrigger value="reservations" className="flex-1 min-w-[110px] rounded-xl py-3 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
-              <Calendar className="w-4 h-4 mr-2" /> Tables
+              <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 shrink-0" /><span>Tables</span></span>
             </TabsTrigger>
             <TabsTrigger value="reviews" className="flex-1 min-w-[110px] rounded-xl py-3 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
-              <Star className="w-4 h-4 mr-2" /> My Reviews
+              <span className="flex items-center gap-1.5"><Star className="w-4 h-4 shrink-0" /><span>My Reviews</span></span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex-1 min-w-[120px] rounded-xl py-3 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all relative">
-              <Bell className="w-4 h-4 mr-2" /> Notifications
+              <span className="flex items-center gap-1.5"><Bell className="w-4 h-4 shrink-0" /><span>Notifications</span></span>
               {notifications.some(n => !n.isRead) && (
                 <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive animate-pulse"></span>
               )}
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex-1 min-w-[110px] rounded-xl py-3 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
-              <User className="w-4 h-4 mr-2" /> Profile
+              <span className="flex items-center gap-1.5"><User className="w-4 h-4 shrink-0" /><span>Profile</span></span>
             </TabsTrigger>
           </TabsList>
           
