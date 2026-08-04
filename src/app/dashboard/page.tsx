@@ -155,7 +155,7 @@ function DashboardContent() {
 
   if (loading || isFetching) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
         <div className="relative">
           <div className="absolute -inset-4 bg-primary/20 blur-xl rounded-full"></div>
           <Loader2 className="h-12 w-12 animate-spin text-primary relative z-10" />
@@ -167,7 +167,7 @@ function DashboardContent() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] dark:bg-[#0a0a0a] pt-12 pb-24">
+    <div className="min-h-[100dvh] bg-[#fafafa] dark:bg-[#0a0a0a] pt-12 pb-24">
       <div className="container mx-auto px-4 max-w-5xl">
         
         {/* Modern Header */}
@@ -199,22 +199,22 @@ function DashboardContent() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="flex h-auto w-full bg-muted/50 p-1 rounded-2xl mb-6 overflow-x-auto gap-0.5">
-            <TabsTrigger value="orders" className="flex-1 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
+            <TabsTrigger value="orders" className="flex-1 shrink-0 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
               <span className="flex items-center justify-center gap-1.5"><ShoppingBag className="w-4 h-4 shrink-0" /><span>Orders</span></span>
             </TabsTrigger>
-            <TabsTrigger value="reservations" className="flex-1 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
+            <TabsTrigger value="reservations" className="flex-1 shrink-0 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
               <span className="flex items-center justify-center gap-1.5"><Calendar className="w-4 h-4 shrink-0" /><span>Tables</span></span>
             </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex-1 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
+            <TabsTrigger value="reviews" className="flex-1 shrink-0 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
               <span className="flex items-center justify-center gap-1.5"><Star className="w-4 h-4 shrink-0" /><span>My Reviews</span></span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex-1 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all relative">
+            <TabsTrigger value="notifications" className="flex-1 shrink-0 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all relative">
               <span className="flex items-center justify-center gap-1.5"><Bell className="w-4 h-4 shrink-0" /><span>Notifications</span></span>
               {notifications.some(n => !n.isRead) && (
                 <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive animate-pulse"></span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex-1 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
+            <TabsTrigger value="profile" className="flex-1 shrink-0 min-w-[80px] rounded-xl py-2.5 text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary transition-all">
               <span className="flex items-center justify-center gap-1.5"><User className="w-4 h-4 shrink-0" /><span>Profile</span></span>
             </TabsTrigger>
           </TabsList>
@@ -581,7 +581,7 @@ function DashboardContent() {
 export default function DashboardPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     }>
