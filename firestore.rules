@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Public collections (Food menu, categories, offers, reviews)
+    match /foods/{foodId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /offers/{offerId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Authenticated Collections (Users, Orders, Reservations, Wishlist, Notifications)
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /orders/{orderId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /reservations/{reservationId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /wishlist/{userId}/items/{foodId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /notifications/{userId}/items/{notificationId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /admin_notifications/{notificationId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Fallback for all documents
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
