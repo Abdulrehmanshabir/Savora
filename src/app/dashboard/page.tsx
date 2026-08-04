@@ -220,7 +220,7 @@ function DashboardContent() {
           </TabsList>
           
           {/* Orders Tab */}
-          <TabsContent value="orders" className="space-y-6 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="orders" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 min-h-[60vh]">
             {orders.length === 0 ? (
               <div className="text-center py-24 bg-card rounded-[2rem] border border-border/40 shadow-sm flex flex-col items-center justify-center">
                 <div className="h-24 w-24 bg-primary/5 rounded-full flex items-center justify-center mb-6">
@@ -301,7 +301,7 @@ function DashboardContent() {
           </TabsContent>
 
           {/* Tables/Reservations Tab */}
-          <TabsContent value="reservations" className="space-y-6 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="reservations" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 min-h-[60vh]">
             {reservations.length === 0 ? (
               <div className="text-center py-24 bg-card rounded-[2rem] border border-border/40 shadow-sm flex flex-col items-center justify-center">
                 <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center mb-6">
@@ -368,7 +368,7 @@ function DashboardContent() {
           </TabsContent>
 
           {/* Reviews Tab */}
-          <TabsContent value="reviews" className="space-y-6 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="reviews" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 min-h-[60vh]">
             {reviews.length === 0 ? (
               <div className="text-center py-24 bg-card rounded-[2rem] border border-border/40 shadow-sm flex flex-col items-center justify-center">
                 <div className="h-24 w-24 bg-primary/5 rounded-full flex items-center justify-center mb-6">
@@ -443,7 +443,7 @@ function DashboardContent() {
           </TabsContent>
 
           {/* Notifications Tab */}
-          <TabsContent value="notifications" className="space-y-6 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="notifications" className="space-y-6 focus-visible:outline-none focus-visible:ring-0 min-h-[60vh]">
             {notifications.length === 0 ? (
               <div className="text-center py-24 bg-card rounded-[2rem] border border-border/40 shadow-sm flex flex-col items-center justify-center">
                 <div className="h-24 w-24 bg-primary/5 rounded-full flex items-center justify-center mb-6">
@@ -496,7 +496,7 @@ function DashboardContent() {
           </TabsContent>
           
           {/* Profile Tab */}
-          <TabsContent value="profile" className="focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="profile" className="focus-visible:outline-none focus-visible:ring-0 min-h-[60vh]">
             <div className="bg-card rounded-[2rem] border border-border/40 shadow-sm overflow-hidden relative">
               <div className="absolute top-0 right-0 w-full h-32 bg-gradient-to-br from-primary/10 via-background to-background"></div>
               
