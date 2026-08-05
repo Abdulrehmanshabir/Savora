@@ -5,9 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { 
   LayoutDashboard, ShoppingBag, Calendar, UtensilsCrossed, 
-  LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight
+  LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight, Tag
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -53,12 +52,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push('/login');
   };
 
-  const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Menu', href: '/admin/menu', icon: UtensilsCrossed },
     { name: 'Food Orders', href: '/admin/orders', icon: ShoppingBag },
     { name: 'Reservations', href: '/admin/reservations', icon: Calendar },
     { name: 'Reviews', href: '/admin/reviews', icon: Star },
+    { name: 'Offers', href: '/admin/offers', icon: Tag },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
