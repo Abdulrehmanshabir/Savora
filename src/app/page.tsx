@@ -14,6 +14,7 @@ import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 export default function Home() {
   const [popularFoods, setPopularFoods] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,6 +34,8 @@ export default function Home() {
         setCategories(topCats);
       } catch (error) {
         console.error("Error fetching homepage data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchData();
@@ -82,7 +85,11 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {categories.map((cat: any) => (
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-40 md:h-56 rounded-2xl bg-muted animate-pulse"></div>
+              ))
+            ) : categories.map((cat: any) => (
               <Link key={cat.id} href={`/menu?category=${cat.slug}`} className="group block">
                 <div className="relative h-40 md:h-56 rounded-2xl overflow-hidden shadow-md">
                   <Image
@@ -115,7 +122,11 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {popularFoods.map((food: any) => (
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-64 rounded-2xl bg-muted animate-pulse"></div>
+              ))
+            ) : popularFoods.map((food: any) => (
               <FoodCard key={food.id} food={food} />
             ))}
           </div>
