@@ -14,14 +14,16 @@ import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 export default function Home() {
   const [popularFoods, setPopularFoods] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [activeOffer, setActiveOffer] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [foodsSnap, categoriesSnap] = await Promise.all([
+        const [foodsSnap, categoriesSnap, offersSnap] = await Promise.all([
           getDocs(collection(db, 'foods')),
-          getDocs(collection(db, 'categories'))
+          getDocs(collection(db, 'categories')),
+          getDocs(collection(db, 'offers'))
         ]);
         
         const allFoods = foodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -30,8 +32,12 @@ export default function Home() {
         const allCats = categoriesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         const topCats = allCats.slice(0, 4);
         
+        const allOffers = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const active = allOffers.find((o: any) => o.isActive);
+        
         setPopularFoods(popular);
         setCategories(topCats);
+        setActiveOffer(active || null);
       } catch (error) {
         console.error("Error fetching homepage data:", error);
       } finally {
