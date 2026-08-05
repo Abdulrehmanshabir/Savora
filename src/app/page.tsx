@@ -1,36 +1,35 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Star, ChefHat, Clock, Utensils } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { FoodCard } from '@/components/food/FoodCard';
-import { getAdminServices } from '@/firebase/admin';
-import { cn, serializeData } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { useEffect, useState } from 'react';
+import { db } from '@/firebase/client';
+import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 
-export const revalidate = 0; // disabled temporarily for dev
+export default function Home() {
+  const [popularFoods, setPopularFoods] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
-async function getHomePageData() {
-  try {
-    const { adminDb } = await getAdminServices();
-    const [popularFoodsSnap, categoriesSnap, offersSnap] = await Promise.all([
-      adminDb.collection('foods').where('isPopular', '==', true).limit(4).get(),
-      adminDb.collection('categories').limit(4).get(),
-      adminDb.collection('offers').where('isActive', '==', true).limit(1).get()
-    ]);
-
-    const popularFoods = popularFoodsSnap.docs.map(doc => serializeData({ id: doc.id, ...doc.data() }));
-    const categories = categoriesSnap.docs.map(doc => serializeData({ id: doc.id, ...doc.data() }));
-    const activeOffer = offersSnap.docs.length > 0 ? serializeData({ id: offersSnap.docs[0].id, ...offersSnap.docs[0].data() }) : null;
-
-    return { popularFoods, categories, activeOffer };
-  } catch (error) {
-    console.error("Error fetching homepage data:", error);
-    return { popularFoods: [], categories: [], activeOffer: null };
-  }
-}
-
-export default async function Home() {
-  const { popularFoods, categories, activeOffer } = await getHomePageData();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [popularFoodsSnap, categoriesSnap] = await Promise.all([
+          getDocs(query(collection(db, 'foods'), where('isPopular', '==', true), limit(4))),
+          getDocs(query(collection(db, 'categories'), limit(4)))
+        ]);
+        setPopularFoods(popularFoodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setCategories(categoriesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      } catch (error) {
+        console.error("Error fetching homepage data:", error);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
