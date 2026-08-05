@@ -197,9 +197,8 @@ export default function Navbar() {
               </Link>
             </div>
           )}
-        </div>
-
-        {/* Mobile Menu */}
+          
+          {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "md:hidden h-10 w-10 rounded-full")}>
@@ -233,6 +232,7 @@ export default function Navbar() {
               </SheetContent>
             </Sheet>
           </div>
+        </div>
       </div>
     </header>
   );

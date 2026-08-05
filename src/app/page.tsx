@@ -35,7 +35,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
       {/* Hero Section */}
-      <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[85dvh] min-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1920&q=80"
@@ -56,11 +56,11 @@ export default async function Home() {
             Discover culinary excellence with our carefully crafted menu. 
             Fresh ingredients, master chefs, and an unforgettable atmosphere await you.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/menu" className={cn(buttonVariants({ size: "lg" }), "rounded-full px-8 text-lg h-14 shadow-lg shadow-primary/30")}>
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto max-w-sm sm:max-w-none">
+            <Link href="/menu" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto rounded-full px-8 text-lg h-14 shadow-lg shadow-primary/30")}>
               Order Now <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
-            <Link href="/reservation" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full px-8 text-lg h-14 bg-white/10 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm")}>
+            <Link href="/reservation" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full sm:w-auto rounded-full px-8 text-lg h-14 bg-white/10 border-white/30 text-white hover:bg-white hover:text-black backdrop-blur-sm")}>
               Reserve a Table
             </Link>
           </div>
