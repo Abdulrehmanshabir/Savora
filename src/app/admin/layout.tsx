@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import {
   LayoutDashboard, ShoppingBag, Calendar, UtensilsCrossed, 
   LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight, Tag
 } from 'lucide-react';

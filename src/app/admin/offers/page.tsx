@@ -163,7 +163,7 @@ export default function AdminOffersPage() {
                 <div className="aspect-[2/1] relative bg-muted w-full overflow-hidden">
                   <img src={offer.imageUrl || 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80'} alt={offer.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-2 right-2 bg-primary text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
-                    {offer.discountPercent || offer.discountPercentage || 0}% OFF
+                    {offer.discountPercent || 0}% OFF
                   </div>
                 </div>
                 <div className="p-4">
