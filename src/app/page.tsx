@@ -18,12 +18,19 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [popularFoodsSnap, categoriesSnap] = await Promise.all([
-          getDocs(query(collection(db, 'foods'), where('isPopular', '==', true), limit(4))),
-          getDocs(query(collection(db, 'categories'), limit(4)))
+        const [foodsSnap, categoriesSnap] = await Promise.all([
+          getDocs(collection(db, 'foods')),
+          getDocs(collection(db, 'categories'))
         ]);
-        setPopularFoods(popularFoodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        setCategories(categoriesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        
+        const allFoods = foodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const popular = allFoods.filter((f: any) => f.isPopular).slice(0, 4);
+        
+        const allCats = categoriesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const topCats = allCats.slice(0, 4);
+        
+        setPopularFoods(popular);
+        setCategories(topCats);
       } catch (error) {
         console.error("Error fetching homepage data:", error);
       }
