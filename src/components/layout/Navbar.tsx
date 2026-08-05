@@ -204,31 +204,60 @@ export default function Navbar() {
               <SheetTrigger className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "md:hidden h-10 w-10 rounded-full")}>
                 <Menu className="h-5 w-5" />
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-xl border-l border-border/50 p-0 flex flex-col">
                 <SheetTitle className="sr-only">Menu</SheetTitle>
-                <nav className="flex flex-col gap-4 mt-8">
-                  {links.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                
+                {/* Mobile Menu Header */}
+                <div className="p-6 border-b border-border/40 flex items-center gap-3 bg-primary/5">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-sm">
+                    <Sparkles className="h-5 w-5" />
+                  </div>
+                  <span className="text-2xl font-black text-primary tracking-tight">Savora</span>
+                </div>
+
+                {/* Mobile Menu Links */}
+                <div className="flex-1 overflow-y-auto py-6 px-4">
+                  <nav className="flex flex-col gap-2">
+                    {links.map((link) => (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center justify-between px-4 py-3.5 rounded-2xl text-base font-bold text-foreground/80 transition-all",
+                          "hover:bg-primary/10 hover:text-primary active:scale-[0.98]",
+                          pathname === link.href ? "bg-primary/10 text-primary" : ""
+                        )}
+                      >
+                        {link.name}
+                        <ChevronRight className={cn(
+                          "h-4 w-4 opacity-50 transition-transform",
+                          pathname === link.href ? "opacity-100 translate-x-1" : ""
+                        )} />
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+                
+                {/* Mobile Menu Footer (Auth) */}
+                {!user && (
+                  <div className="p-6 border-t border-border/40 bg-muted/20 flex flex-col gap-3">
+                    <Link 
+                      href="/login" 
+                      onClick={() => setIsOpen(false)} 
+                      className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full rounded-xl border-primary/20 hover:bg-primary/5 font-bold")}
                     >
-                      {link.name}
+                      Login
                     </Link>
-                  ))}
-                  
-                  {!user && (
-                    <div className="flex flex-col gap-2 mt-4 pt-4 border-t">
-                      <Link href="/login" onClick={() => setIsOpen(false)} className={cn(buttonVariants({ variant: "outline" }), "w-full justify-start")}>
-                        Login
-                      </Link>
-                      <Link href="/signup" onClick={() => setIsOpen(false)} className={cn(buttonVariants(), "w-full justify-start")}>
-                        Sign Up
-                      </Link>
-                    </div>
-                  )}
-                </nav>
+                    <Link 
+                      href="/signup" 
+                      onClick={() => setIsOpen(false)} 
+                      className={cn(buttonVariants({ size: "lg" }), "w-full rounded-xl shadow-lg shadow-primary/20 font-bold")}
+                    >
+                      Create Account
+                    </Link>
+                  </div>
+                )}
               </SheetContent>
             </Sheet>
           </div>
