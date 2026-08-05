@@ -173,18 +173,6 @@ export default function Navbar() {
                   </DropdownMenuItem>
                 </div>
                 
-                <div className="p-1.5 border-t border-border/40 bg-muted/20">
-                  <DropdownMenuItem 
-                    onClick={handleLogout} 
-                    className="flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer text-destructive focus:text-destructive hover:bg-destructive/10 transition-colors group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <LogOut className="h-4 w-4" />
-                      <span className="text-xs font-semibold">Log out</span>
-                    </div>
-                    <ChevronRight className="h-3.5 w-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-                  </DropdownMenuItem>
-                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -198,10 +186,10 @@ export default function Navbar() {
             </div>
           )}
           
-          {/* Mobile Menu */}
-          <div className="md:hidden flex items-center">
+          {/* Hamburger Menu (Mobile + Desktop) */}
+          <div className="flex items-center">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "md:hidden h-10 w-10 rounded-full")}>
+              <SheetTrigger className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-10 w-10 rounded-full")}>
                 <Menu className="h-5 w-5" />
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-xl border-l border-border/50 p-0 flex flex-col">
@@ -239,8 +227,8 @@ export default function Navbar() {
                   </nav>
                 </div>
                 
-                {/* Mobile Menu Footer (Auth) */}
-                {!user && (
+                {/* Menu Footer (Auth) */}
+                {!user ? (
                   <div className="p-6 border-t border-border/40 bg-muted/20 flex flex-col gap-3">
                     <Link 
                       href="/login" 
@@ -256,6 +244,16 @@ export default function Navbar() {
                     >
                       Create Account
                     </Link>
+                  </div>
+                ) : (
+                  <div className="p-6 border-t border-border/40 bg-muted/20 flex flex-col gap-3">
+                    <button 
+                      onClick={() => { setIsOpen(false); handleLogout(); }} 
+                      className={cn(buttonVariants({ variant: "destructive", size: "lg" }), "w-full rounded-xl shadow-lg shadow-destructive/20 font-bold gap-2")}
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Log out
+                    </button>
                   </div>
                 )}
               </SheetContent>
