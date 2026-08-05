@@ -121,7 +121,7 @@ const offers = [
   {
     title: 'Weekend Special: 20% Off Main Courses',
     description: 'Enjoy a 20% discount on all main course dishes this weekend!',
-    imageUrl: 'https://images.unsplash.com/photo-1544025162-831e5f037dd3?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80',
     discountPercent: 20,
     validUntil: Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), // +7 days
     isActive: true
