@@ -53,6 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push('/login');
   };
 
+  const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Menu', href: '/admin/menu', icon: UtensilsCrossed },
     { name: 'Food Orders', href: '/admin/orders', icon: ShoppingBag },
