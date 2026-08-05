@@ -57,7 +57,7 @@ function MenuContent() {
   }, [currentCategory, searchQuery]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-[100dvh]">
       {/* Page Header */}
       <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -106,7 +106,7 @@ function MenuContent() {
 
 export default function MenuPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-[100dvh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
       <MenuContent />
     </Suspense>
   );

@@ -132,7 +132,7 @@ export default function RestaurantReviewsPage() {
   const averageRating = reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-[100dvh] bg-background pb-24">
       {/* Hero Section */}
       <div className="relative bg-zinc-900 py-24 mb-16 overflow-hidden">
         <div className="absolute inset-0 z-0">

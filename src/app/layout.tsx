@@ -111,7 +111,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(restaurantStructuredData) }}
         />
       </head>
-      <body className={`${poppins.variable} font-sans antialiased min-h-screen flex flex-col`}>
+      <body className={`${poppins.variable} font-sans antialiased min-h-[100dvh] flex flex-col`}>
         <AuthProvider>
           <CartProvider>
             <Navbar />

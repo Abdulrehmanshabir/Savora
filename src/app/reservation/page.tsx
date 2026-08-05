@@ -192,7 +192,7 @@ export default function ReservationPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-[100dvh]">
       {/* Hero Banner */}
       <section className="relative h-[38vh] min-h-[280px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">

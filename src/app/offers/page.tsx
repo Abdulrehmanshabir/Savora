@@ -24,7 +24,7 @@ export default async function OffersPage() {
   const offers = await getOffers();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-[100dvh]">
       <section className="relative h-[30vh] min-h-[250px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image

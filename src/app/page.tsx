@@ -33,7 +33,7 @@ export default async function Home() {
   const { popularFoods, categories, activeOffer } = await getHomePageData();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-[100dvh]">
       {/* Hero Section */}
       <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">

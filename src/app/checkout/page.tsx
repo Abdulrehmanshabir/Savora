@@ -111,7 +111,7 @@ export default function CheckoutPage() {
 
   if (orderSuccess) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center pt-16">
+      <div className="min-h-[100dvh] bg-background flex items-center justify-center pt-16">
         <div className="max-w-md w-full bg-card p-8 rounded-3xl shadow-xl text-center border border-border/50">
           <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="h-10 w-10" />
@@ -141,7 +141,7 @@ export default function CheckoutPage() {
   if (items.length === 0) return null; // Prevent flicker before redirect
 
   return (
-    <div className="min-h-screen bg-muted/30 pt-8 pb-20">
+    <div className="min-h-[100dvh] bg-muted/30 pt-8 pb-20">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="mb-6">
           <button 

@@ -33,7 +33,7 @@ export default async function FoodDetailsPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="min-h-screen bg-background pt-10 pb-20">
+    <div className="min-h-[100dvh] bg-background pt-10 pb-20">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="mb-6">
           <Link href="/menu" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors">

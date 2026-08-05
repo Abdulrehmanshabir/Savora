@@ -42,7 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading || !user || user.role !== 'admin') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
       </div>
     );
@@ -63,7 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-muted/20 flex flex-col md:flex-row">
+    <div className="min-h-[100dvh] bg-muted/20 flex flex-col md:flex-row">
       {/* Mobile Header (Sidebar Toggle) */}
       <div className="md:hidden flex items-center justify-between bg-card border-b border-border/50 p-4">
         <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Admin Sidebar */}
       <aside className={cn(
-        "w-full md:w-64 bg-card border-r border-border/50 shrink-0 md:min-h-screen md:sticky md:top-0 transition-transform duration-300 md:block z-40 flex flex-col",
+        "w-full md:w-64 bg-card border-r border-border/50 shrink-0 md:min-h-[100dvh] md:sticky md:top-0 transition-transform duration-300 md:block z-40 flex flex-col",
         isSidebarOpen ? "block fixed inset-0 overflow-y-auto" : "hidden"
       )}>
         <div className="p-6 hidden md:flex items-center gap-2">
