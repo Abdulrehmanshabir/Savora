@@ -88,6 +88,10 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Explore by Category</h2>
             <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+            {/* DEBUG INFO */}
+            <div className="mt-4 p-4 bg-red-500/10 text-red-500 text-sm overflow-auto">
+               Debug State: isLoading={isLoading ? 'true' : 'false'}, cats={categories.length}, foods={popularFoods.length}
+            </div>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
