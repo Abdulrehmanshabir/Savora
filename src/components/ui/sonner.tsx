@@ -18,12 +18,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
       closeButton={true}
       icons={{
         success: (
-          <div className="h-7 w-7 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-sm">
+          <div className="h-7 w-7 rounded-full bg-primary/15 text-primary border border-primary/30 flex items-center justify-center shrink-0 shadow-sm">
             <CheckCircle2 className="h-4 w-4" />
           </div>
         ),
         info: (
-          <div className="h-7 w-7 rounded-full bg-primary/15 text-primary border border-primary/30 flex items-center justify-center shrink-0 shadow-sm">
+          <div className="h-7 w-7 rounded-full bg-blue-500/15 text-blue-500 border border-blue-500/30 flex items-center justify-center shrink-0 shadow-sm">
             <Info className="h-4 w-4" />
           </div>
         ),
@@ -56,7 +56,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           closeButton:
             "!bg-black hover:!bg-black/80 !text-white !border-0 !rounded-full !p-1.5 !transition-all [&>svg]:!stroke-[2.5]",
           success:
-            "!border-emerald-500/30 !bg-gradient-to-r !from-emerald-500/10 !via-card !to-card",
+            "!border-primary/30 !bg-gradient-to-r !from-primary/10 !via-card !to-card",
           error:
             "!border-rose-500/30 !bg-gradient-to-r !from-rose-500/10 !via-card !to-card",
           warning:
