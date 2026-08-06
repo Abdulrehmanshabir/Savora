@@ -30,6 +30,7 @@ export default function AdminMenuPage() {
     name: '',
     description: '',
     price: '',
+    discountPrice: '',
     categoryId: '',
     image: '',
     isPopular: false
@@ -39,7 +40,7 @@ export default function AdminMenuPage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingFood, setEditingFood] = useState<any>(null);
   const [editFormData, setEditFormData] = useState({
-    name: '', description: '', price: '', categoryId: '', image: '', isPopular: false
+    name: '', description: '', price: '', discountPrice: '', categoryId: '', image: '', isPopular: false
   });
   const [editSaving, setEditSaving] = useState(false);
 
@@ -103,7 +104,7 @@ export default function AdminMenuPage() {
   };
 
   const openAddDialogWithCategory = (categoryId: string) => {
-    setFormData({ name: '', description: '', price: '', categoryId, image: '', isPopular: false });
+    setFormData({ name: '', description: '', price: '', discountPrice: '', categoryId, image: '', isPopular: false });
     setIsAddOpen(true);
     // Auto expand the category if it was collapsed so they can see the new item
     if (!expandedCats[categoryId]) {
@@ -115,21 +116,29 @@ export default function AdminMenuPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const newFood = {
+      const parsedPrice = parseFloat(formData.price);
+      const parsedDiscount = formData.discountPrice ? parseFloat(formData.discountPrice) : null;
+      
+      const newFood: any = {
         name: formData.name,
         description: formData.description,
-        price: parseFloat(formData.price),
+        price: parsedPrice,
         categoryId: formData.categoryId,
         image: formData.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80',
         isPopular: formData.isPopular,
         rating: 5.0,
         reviews: 0
       };
+      
+      if (parsedDiscount && !isNaN(parsedDiscount)) {
+        newFood.discountPrice = parsedDiscount;
+      }
+      
       const docRef = await addDoc(collection(db, 'foods'), newFood);
       setFoods([...foods, { id: docRef.id, ...newFood }]);
       toast.success('Item added successfully');
       setIsAddOpen(false);
-      setFormData({ name: '', description: '', price: '', categoryId: '', image: '', isPopular: false });
+      setFormData({ name: '', description: '', price: '', discountPrice: '', categoryId: '', image: '', isPopular: false });
     } catch (error) {
       console.error(error);
       toast.error('Failed to add item');
@@ -163,6 +172,7 @@ export default function AdminMenuPage() {
       name: food.name || '',
       description: food.description || '',
       price: food.price?.toString() || '',
+      discountPrice: food.discountPrice?.toString() || '',
       categoryId: food.categoryId || '',
       image: food.image || '',
       isPopular: food.isPopular || false
@@ -175,14 +185,24 @@ export default function AdminMenuPage() {
     if (!editingFood) return;
     setEditSaving(true);
     try {
-      const updatedData = {
+      const parsedPrice = parseFloat(editFormData.price);
+      const parsedDiscount = editFormData.discountPrice ? parseFloat(editFormData.discountPrice) : null;
+      
+      const updatedData: any = {
         name: editFormData.name,
         description: editFormData.description,
-        price: parseFloat(editFormData.price),
+        price: parsedPrice,
         categoryId: editFormData.categoryId,
         image: editFormData.image,
         isPopular: editFormData.isPopular
       };
+      
+      if (parsedDiscount && !isNaN(parsedDiscount)) {
+        updatedData.discountPrice = parsedDiscount;
+      } else {
+        updatedData.discountPrice = null;
+      }
+      
       await updateDoc(doc(db, 'foods', editingFood.id), updatedData);
       setFoods(foods.map(f => f.id === editingFood.id ? { ...f, ...updatedData } : f));
       toast.success('Item updated successfully');
@@ -305,10 +325,14 @@ export default function AdminMenuPage() {
                   <Label className="text-sm font-semibold">Description</Label>
                   <Input required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Briefly describe the item ingredients..." className="bg-muted/30 h-11" />
                 </div>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-3 gap-5">
                   <div className="space-y-2.5">
                     <Label className="text-sm font-semibold">Price ($)</Label>
                     <Input type="number" step="0.01" required value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} placeholder="0.00" className="bg-muted/30 h-11" />
+                  </div>
+                  <div className="space-y-2.5">
+                    <Label className="text-sm font-semibold">Sale Price ($)</Label>
+                    <Input type="number" step="0.01" value={formData.discountPrice} onChange={e => setFormData({...formData, discountPrice: e.target.value})} placeholder="Optional" className="bg-muted/30 h-11" />
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-sm font-semibold">Category</Label>
@@ -354,10 +378,14 @@ export default function AdminMenuPage() {
                   <Label className="text-sm font-semibold">Description</Label>
                   <Input required value={editFormData.description} onChange={e => setEditFormData({...editFormData, description: e.target.value})} placeholder="Briefly describe the item ingredients..." className="bg-muted/30 h-11" />
                 </div>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-3 gap-5">
                   <div className="space-y-2.5">
                     <Label className="text-sm font-semibold">Price ($)</Label>
                     <Input type="number" step="0.01" required value={editFormData.price} onChange={e => setEditFormData({...editFormData, price: e.target.value})} placeholder="0.00" className="bg-muted/30 h-11" />
+                  </div>
+                  <div className="space-y-2.5">
+                    <Label className="text-sm font-semibold">Sale Price ($)</Label>
+                    <Input type="number" step="0.01" value={editFormData.discountPrice} onChange={e => setEditFormData({...editFormData, discountPrice: e.target.value})} placeholder="Optional" className="bg-muted/30 h-11" />
                   </div>
                   <div className="space-y-2.5">
                     <Label className="text-sm font-semibold">Category</Label>
