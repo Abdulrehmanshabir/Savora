@@ -96,11 +96,11 @@ export default function AdminOffersPage() {
         </div>
         
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger render={
             <Button className="gap-2 rounded-xl h-11 px-6 shadow-md" size="lg">
               <Plus className="h-5 w-5" /> Add New Offer
             </Button>
-          </DialogTrigger>
+          } />
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Add New Offer</DialogTitle>
