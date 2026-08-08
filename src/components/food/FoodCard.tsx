@@ -1,6 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Clock, Heart, ShoppingBag, Plus, Minus, X } from 'lucide-react';
@@ -61,10 +64,37 @@ const ADDON_CATEGORIES = [
 ];
 
 export function FoodCard({ food, globalAddons }: { food: FoodProps, globalAddons?: any[] }) {
+  const router = useRouter();
   const { addToCart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const currentAddons = globalAddons && globalAddons.length > 0 ? globalAddons : ADDON_CATEGORIES;
+  
+  // Favorites State
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const favs = JSON.parse(localStorage.getItem('savora_favorites') || '[]');
+    if (favs.includes(food.id)) {
+      setIsFavorite(true);
+    }
+  }, [food.id]);
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const favs = JSON.parse(localStorage.getItem('savora_favorites') || '[]');
+    if (isFavorite) {
+      const newFavs = favs.filter((id: string) => id !== food.id);
+      localStorage.setItem('savora_favorites', JSON.stringify(newFavs));
+      setIsFavorite(false);
+      toast.success('Removed from favorites');
+    } else {
+      favs.push(food.id);
+      localStorage.setItem('savora_favorites', JSON.stringify(favs));
+      setIsFavorite(true);
+      toast.success('Added to favorites');
+    }
+  };
   
   // Modal State
   const [quantity, setQuantity] = useState(1);
@@ -153,19 +183,22 @@ export function FoodCard({ food, globalAddons }: { food: FoodProps, globalAddons
             variant="ghost" 
             size="icon" 
             className="absolute bottom-3 right-3 bg-white/80 backdrop-blur-md hover:bg-white text-dark rounded-full h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-            onClick={(e) => {
-              e.stopPropagation();
-              // wish list logic could go here
-            }}
+            onClick={toggleFavorite}
           >
-            <Heart className="h-4 w-4 text-black" />
+            <Heart className={cn("h-4 w-4", isFavorite ? "fill-red-500 text-red-500" : "text-black")} />
           </Button>
         </div>
         
         <CardContent className="p-4 flex-grow flex flex-col gap-2">
           <div className="flex justify-between items-start gap-2">
             <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">{food.name}</h3>
-            <div className="flex items-center gap-1 bg-muted px-1.5 py-0.5 rounded-md">
+            <div 
+              className="flex items-center gap-1 bg-muted px-1.5 py-0.5 rounded-md hover:bg-primary/20 cursor-pointer transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push('/reviews');
+              }}
+            >
               <Star className="h-3 w-3 fill-secondary text-secondary" />
               <span className="text-xs font-medium">{food.rating}</span>
             </div>
