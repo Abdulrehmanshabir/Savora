@@ -15,15 +15,17 @@ export default function Home() {
   const [popularFoods, setPopularFoods] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [activeOffer, setActiveOffer] = useState<any>(null);
+  const [addons, setAddons] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [foodsSnap, categoriesSnap, offersSnap] = await Promise.all([
+        const [foodsSnap, categoriesSnap, offersSnap, addonsSnap] = await Promise.all([
           getDocs(collection(db, 'foods')),
           getDocs(collection(db, 'categories')),
-          getDocs(collection(db, 'offers'))
+          getDocs(collection(db, 'offers')),
+          getDocs(collection(db, 'addons'))
         ]);
         
         const allFoods = foodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -35,9 +37,12 @@ export default function Home() {
         const allOffers = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         const active = allOffers.find((o: any) => o.isActive);
         
+        const fetchedAddons = addonsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
         setPopularFoods(popular);
         setCategories(topCats);
         setActiveOffer(active || null);
+        setAddons(fetchedAddons);
       } catch (error) {
         console.error("Error fetching homepage data:", error);
       } finally {
@@ -133,7 +138,7 @@ export default function Home() {
                 <div key={i} className="h-64 rounded-2xl bg-muted animate-pulse"></div>
               ))
             ) : popularFoods.map((food: any) => (
-              <FoodCard key={food.id} food={food} />
+              <FoodCard key={food.id} food={food} globalAddons={addons} />
             ))}
           </div>
           
