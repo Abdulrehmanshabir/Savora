@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { ShoppingCart, Menu, User, ShieldCheck, LogOut, LayoutDashboard, ChevronRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { ShoppingCart, Menu, User, ShieldCheck, LogOut, LayoutDashboard, ChevronRight, ArrowLeft, Sparkles, Heart } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -101,6 +101,9 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-2 sm:gap-4">
           <SearchDialog />
+          <Link href="/favorites" className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "relative h-10 w-10 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors")}>
+            <Heart className="h-5 w-5" />
+          </Link>
           <CartSheet />
           {user && <NotificationDropdown />}
 
