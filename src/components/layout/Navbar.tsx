@@ -99,10 +99,17 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0 mr-1 sm:mr-4">
-          <span className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">Savora</span>
-        </Link>
+        {/* Logo and Back Button */}
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0 mr-1 sm:mr-4">
+          {pathname !== '/' && (
+            <Button variant="ghost" size="icon" className="md:hidden h-8 w-8 rounded-full bg-muted/50 hover:bg-primary/10 hover:text-primary mr-1 border border-border/50" onClick={() => router.back()}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+          <Link href="/" className="flex items-center gap-2">
+            <span className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">Savora</span>
+          </Link>
+        </div>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">

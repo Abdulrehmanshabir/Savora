@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, ShoppingBag, Calendar, UtensilsCrossed, 
-  LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight, Tag, ListPlus
+  LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight, Tag, ListPlus, ArrowLeft
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -67,14 +67,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-[100dvh] bg-muted/20 flex flex-col md:flex-row">
       {/* Mobile Header (Sidebar Toggle) */}
-      <div className="md:hidden flex items-center justify-between bg-card border-b border-border/50 p-4">
+      <div className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-card border-b border-border/50 p-4 shadow-sm">
         <div className="flex items-center gap-2">
-          <span className="bg-primary text-primary-foreground p-1.5 rounded-lg">
-            <LayoutDashboard className="h-5 w-5" />
-          </span>
-          <h2 className="text-xl font-bold text-primary">Savora</h2>
+          {pathname !== '/admin' && (
+            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-muted/50 hover:bg-primary/10 hover:text-primary mr-1 border border-border/50" onClick={() => router.back()}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+          <div className="flex items-center gap-2">
+            {pathname === '/admin' && (
+              <span className="bg-primary text-primary-foreground p-1.5 rounded-lg">
+                <LayoutDashboard className="h-5 w-5" />
+              </span>
+            )}
+            <h2 className="text-xl font-bold text-primary">Savora</h2>
+          </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="rounded-full bg-muted/30">
           <Menu className="h-5 w-5" />
         </Button>
       </div>
