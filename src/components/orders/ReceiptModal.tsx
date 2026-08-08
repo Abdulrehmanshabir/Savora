@@ -13,6 +13,7 @@ interface ReceiptItem {
   price: number;
   quantity: number;
   image?: string;
+  addons?: any[];
 }
 
 export interface ReceiptOrder {
