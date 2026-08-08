@@ -51,8 +51,9 @@ const ADDON_CATEGORIES = [
   {
     id: 'extras',
     name: 'Extra Toppings',
-    type: 'multiple',
+    type: 'single',
     options: [
+      { id: 'no_extra', name: 'No Extras', price: 0 },
       { id: 'cheese', name: 'Extra Cheese', price: 1.00 },
       { id: 'sauce', name: 'Extra Sauce', price: 0.50 },
     ]
@@ -65,11 +66,11 @@ export function FoodCard({ food }: { food: FoodProps }) {
   
   // Modal State
   const [quantity, setQuantity] = useState(1);
-  const [selectedAddons, setSelectedAddons] = useState<Record<string, string[]>>({});
+  const [selectedAddons, setSelectedAddons] = useState<Record<string, string>>({});
 
   const basePrice = food.discountPrice || food.price;
   
-  const addonsTotal = Object.values(selectedAddons).flat().reduce((sum, optionId) => {
+  const addonsTotal = Object.values(selectedAddons).reduce((sum, optionId) => {
     let price = 0;
     for (const cat of ADDON_CATEGORIES) {
       const opt = cat.options.find(o => o.id === optionId);
@@ -85,15 +86,16 @@ export function FoodCard({ food }: { food: FoodProps }) {
     e.stopPropagation();
     setQuantity(1);
     setSelectedAddons({
-      drink: ['no_drink'],
-      fries: ['no_fries']
+      drink: 'no_drink',
+      fries: 'no_fries',
+      extras: 'no_extra'
     });
     setIsModalOpen(true);
   };
 
   const handleAddToCart = () => {
     // Generate unique ID based on food ID and selected addons (sorted so order doesn't matter)
-    const allSelectedIds = Object.values(selectedAddons).flat().sort();
+    const allSelectedIds = Object.values(selectedAddons).sort();
     const cartItemId = `${food.id}-${allSelectedIds.join('-')}`;
     
     const cartAddons = allSelectedIds.map(id => {
@@ -103,7 +105,7 @@ export function FoodCard({ food }: { food: FoodProps }) {
         if (opt) found = opt;
       }
       return { id: found.id, name: found.name, price: found.price };
-    }).filter(a => a.name !== 'No Drink' && a.name !== 'No Fries');
+    }).filter(a => a.name !== 'No Drink' && a.name !== 'No Fries' && a.name !== 'No Extras');
 
     addToCart({
       id: cartItemId,
@@ -232,57 +234,21 @@ export function FoodCard({ food }: { food: FoodProps }) {
                 <span className="text-sm text-muted-foreground">Optional</span>
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {ADDON_CATEGORIES.map(category => (
-                  <div key={category.id} className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-md">{category.name}</h4>
-                      <span className="text-xs text-muted-foreground">{category.type === 'single' ? 'Choose 1' : 'Optional'}</span>
-                    </div>
-                    <div className="space-y-2">
-                      {category.options.map(option => {
-                        const isSelected = (selectedAddons[category.id] || []).includes(option.id);
-                        return (
-                          <label 
-                            key={option.id} 
-                            className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
-                              isSelected ? 'border-primary bg-primary/5' : 'border-border/50 hover:bg-muted/30'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              {category.type === 'single' ? (
-                                <input 
-                                  type="radio" 
-                                  name={`addon-${category.id}`} 
-                                  className="h-4 w-4 accent-primary cursor-pointer"
-                                  checked={isSelected}
-                                  onChange={() => setSelectedAddons(prev => ({ ...prev, [category.id]: [option.id] }))}
-                                />
-                              ) : (
-                                <Checkbox 
-                                  checked={isSelected} 
-                                  onCheckedChange={() => {
-                                    setSelectedAddons(prev => {
-                                      const current = prev[category.id] || [];
-                                      return {
-                                        ...prev,
-                                        [category.id]: current.includes(option.id) 
-                                          ? current.filter(id => id !== option.id) 
-                                          : [...current, option.id]
-                                      };
-                                    });
-                                  }}
-                                />
-                              )}
-                              <span className="font-medium text-sm">{option.name}</span>
-                            </div>
-                            {option.price > 0 ? (
-                              <span className="text-sm font-semibold text-muted-foreground">+${option.price.toFixed(2)}</span>
-                            ) : null}
-                          </label>
-                        );
-                      })}
-                    </div>
+                  <div key={category.id} className="space-y-2">
+                    <Label className="text-sm font-semibold">{category.name}</Label>
+                    <select
+                      className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-muted/30 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all cursor-pointer"
+                      value={selectedAddons[category.id] || category.options[0].id}
+                      onChange={(e) => setSelectedAddons(prev => ({ ...prev, [category.id]: e.target.value }))}
+                    >
+                      {category.options.map(option => (
+                        <option key={option.id} value={option.id}>
+                          {option.name} {option.price > 0 ? `(+$${option.price.toFixed(2)})` : ''}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 ))}
               </div>
