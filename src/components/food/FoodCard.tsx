@@ -9,8 +9,8 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface FoodProps {
   id: string;
@@ -238,17 +238,32 @@ export function FoodCard({ food }: { food: FoodProps }) {
                 {ADDON_CATEGORIES.map(category => (
                   <div key={category.id} className="space-y-2">
                     <Label className="text-sm font-semibold">{category.name}</Label>
-                    <select
-                      className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-muted/30 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all cursor-pointer"
+                    <Select
                       value={selectedAddons[category.id] || category.options[0].id}
-                      onChange={(e) => setSelectedAddons(prev => ({ ...prev, [category.id]: e.target.value }))}
+                      onValueChange={(val) => setSelectedAddons(prev => ({ ...prev, [category.id]: val || '' }))}
                     >
-                      {category.options.map(option => (
-                        <option key={option.id} value={option.id}>
-                          {option.name} {option.price > 0 ? `(+$${option.price.toFixed(2)})` : ''}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger className="w-full h-11 bg-muted/30 border-input rounded-xl hover:bg-muted/50 transition-colors">
+                        <SelectValue placeholder={`Select ${category.name}`} />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border/50 shadow-xl overflow-hidden p-1 min-w-[200px]">
+                        {category.options.map(option => (
+                          <SelectItem 
+                            key={option.id} 
+                            value={option.id} 
+                            className="rounded-lg cursor-pointer py-2.5 data-[highlighted]:bg-primary/10 data-[highlighted]:text-primary transition-colors"
+                          >
+                            <span className="flex items-center justify-between w-full min-w-[200px] pr-2">
+                              <span>{option.name}</span>
+                              {option.price > 0 && (
+                                <span className="text-muted-foreground font-medium text-xs ml-4">
+                                  +${option.price.toFixed(2)}
+                                </span>
+                              )}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 ))}
               </div>
