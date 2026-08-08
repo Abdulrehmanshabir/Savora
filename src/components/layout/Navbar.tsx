@@ -5,13 +5,14 @@ import { useRouter, usePathname } from 'next/navigation';
 import { ShoppingCart, Menu, User, ShieldCheck, LogOut, LayoutDashboard, ChevronRight, ArrowLeft, Sparkles, Heart } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SearchDialog } from '@/components/layout/SearchDialog';
 import { CartSheet } from '@/components/cart/CartSheet';
 import { NotificationDropdown } from '@/components/layout/NotificationDropdown';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,9 +25,21 @@ import {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [favCount, setFavCount] = useState(0);
   const { user, signOut } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const updateFavCount = () => {
+      const favs = JSON.parse(localStorage.getItem('savora_favorites') || '[]');
+      setFavCount(favs.length);
+    };
+
+    updateFavCount();
+    window.addEventListener('savora_favorites_changed', updateFavCount);
+    return () => window.removeEventListener('savora_favorites_changed', updateFavCount);
+  }, []);
 
   if (pathname.startsWith('/admin')) {
     return null;
@@ -101,8 +114,13 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-2 sm:gap-4">
           <SearchDialog />
-          <Link href="/favorites" className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "relative h-10 w-10 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors")}>
+          <Link href="/favorites" className="relative h-10 w-10 flex items-center justify-center rounded-full bg-muted/50 transition-all hover:bg-primary/10 hover:text-primary border border-border/50 shadow-sm">
             <Heart className="h-5 w-5" />
+            {favCount > 0 && (
+              <Badge className="absolute top-0 right-0 h-4 w-4 flex items-center justify-center p-0 rounded-full bg-primary text-white text-[9px] font-bold shadow-md">
+                {favCount}
+              </Badge>
+            )}
           </Link>
           <CartSheet />
           {user && <NotificationDropdown />}
