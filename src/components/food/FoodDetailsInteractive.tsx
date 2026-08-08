@@ -15,6 +15,7 @@ export function FoodDetailsInteractive({ food }: { food: any }) {
   const handleAddToCart = () => {
     addToCart({
       id: food.id,
+      foodId: food.id,
       name: food.name,
       price: food.discountPrice || food.price,
       image: food.images[0]
