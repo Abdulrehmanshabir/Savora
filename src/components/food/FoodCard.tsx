@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 interface FoodProps {
   id: string;
@@ -32,10 +32,10 @@ const ADDON_CATEGORIES = [
     name: 'Choose a Drink',
     type: 'single',
     options: [
-      { id: 'no_drink', name: 'No Drink', price: 0 },
       { id: 'pepsi', name: 'Pepsi', price: 1.50 },
       { id: 'coke', name: 'Coca Cola', price: 1.50 },
       { id: 'sprite', name: 'Sprite', price: 1.50 },
+      { id: 'fanta', name: 'Fanta', price: 1.50 },
     ]
   },
   {
@@ -43,19 +43,19 @@ const ADDON_CATEGORIES = [
     name: 'Choose Fries',
     type: 'single',
     options: [
-      { id: 'no_fries', name: 'No Fries', price: 0 },
       { id: 'reg_fries', name: 'Regular Fries', price: 2.50 },
       { id: 'lrg_fries', name: 'Large Fries', price: 3.50 },
+      { id: 'curly_fries', name: 'Curly Fries', price: 4.00 },
     ]
   },
   {
     id: 'extras',
     name: 'Extra Toppings',
-    type: 'single',
+    type: 'multiple',
     options: [
-      { id: 'no_extra', name: 'No Extras', price: 0 },
       { id: 'cheese', name: 'Extra Cheese', price: 1.00 },
       { id: 'sauce', name: 'Extra Sauce', price: 0.50 },
+      { id: 'jalapeno', name: 'Jalapenos', price: 0.75 },
     ]
   }
 ];
@@ -70,14 +70,16 @@ export function FoodCard({ food }: { food: FoodProps }) {
 
   const basePrice = food.discountPrice || food.price;
   
-  const addonsTotal = Object.values(selectedAddons).reduce((sum, optionId) => {
-    let price = 0;
-    for (const cat of ADDON_CATEGORIES) {
-      const opt = cat.options.find(o => o.id === optionId);
-      if (opt) price = opt.price;
-    }
-    return sum + price;
-  }, 0);
+  const addonsTotal = Object.values(selectedAddons)
+    .flatMap(val => val.split(',').filter(Boolean))
+    .reduce((sum, optionId) => {
+      let price = 0;
+      for (const cat of ADDON_CATEGORIES) {
+        const opt = cat.options.find(o => o.id === optionId);
+        if (opt) price = opt.price;
+      }
+      return sum + price;
+    }, 0);
   
   const totalPrice = (basePrice + addonsTotal) * quantity;
 
@@ -85,17 +87,15 @@ export function FoodCard({ food }: { food: FoodProps }) {
     e.preventDefault();
     e.stopPropagation();
     setQuantity(1);
-    setSelectedAddons({
-      drink: 'no_drink',
-      fries: 'no_fries',
-      extras: 'no_extra'
-    });
+    setSelectedAddons({});
     setIsModalOpen(true);
   };
 
   const handleAddToCart = () => {
     // Generate unique ID based on food ID and selected addons (sorted so order doesn't matter)
-    const allSelectedIds = Object.values(selectedAddons).sort();
+    const allSelectedIds = Object.values(selectedAddons)
+      .flatMap(val => val.split(',').filter(Boolean))
+      .sort();
     const cartItemId = `${food.id}-${allSelectedIds.join('-')}`;
     
     const cartAddons = allSelectedIds.map(id => {
@@ -105,7 +105,7 @@ export function FoodCard({ food }: { food: FoodProps }) {
         if (opt) found = opt;
       }
       return { id: found.id, name: found.name, price: found.price };
-    }).filter(a => a.name !== 'No Drink' && a.name !== 'No Fries' && a.name !== 'No Extras');
+    });
 
     addToCart({
       id: cartItemId,
@@ -234,39 +234,74 @@ export function FoodCard({ food }: { food: FoodProps }) {
                 <span className="text-sm text-muted-foreground">Optional</span>
               </div>
               
-              <div className="space-y-5">
+              <Accordion defaultValue={["drink"]} className="w-full">
                 {ADDON_CATEGORIES.map(category => (
-                  <div key={category.id} className="space-y-2">
-                    <Label className="text-sm font-semibold">{category.name}</Label>
-                    <Select
-                      value={selectedAddons[category.id] || category.options[0].id}
-                      onValueChange={(val) => setSelectedAddons(prev => ({ ...prev, [category.id]: val || '' }))}
-                    >
-                      <SelectTrigger className="w-full h-11 bg-muted/30 border-input rounded-xl hover:bg-muted/50 transition-colors">
-                        <SelectValue placeholder={`Select ${category.name}`} />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl border-border/50 shadow-xl overflow-hidden p-1 min-w-[200px]">
-                        {category.options.map(option => (
-                          <SelectItem 
-                            key={option.id} 
-                            value={option.id} 
-                            className="rounded-lg cursor-pointer py-2.5 data-[highlighted]:bg-primary/10 data-[highlighted]:text-primary transition-colors"
+                  <AccordionItem key={category.id} value={category.id} className="border-b-0 mb-4 bg-muted/20 rounded-2xl overflow-hidden border border-border/50">
+                    <AccordionTrigger className="px-5 py-4 hover:no-underline hover:bg-muted/30 transition-colors data-[state=open]:border-b border-border/50">
+                      <div className="flex flex-col items-start text-left">
+                        <span className="font-semibold text-base">{category.name}</span>
+                        <span className="text-xs text-muted-foreground font-normal mt-0.5">
+                          {category.type === 'single' ? 'Choose up to 1' : 'Choose multiple'}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-5 py-4 pb-5 space-y-3 bg-background">
+                      {category.options.map(option => {
+                        const currentSelections = selectedAddons[category.id] || '';
+                        const isSelected = currentSelections.includes(option.id);
+                        
+                        return (
+                          <div 
+                            key={option.id}
+                            className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all ${
+                              isSelected ? 'border-primary bg-primary/5 shadow-sm' : 'border-border/50 hover:bg-muted/40'
+                            }`}
+                            onClick={() => {
+                              setSelectedAddons(prev => {
+                                const current = prev[category.id] || '';
+                                if (category.type === 'single') {
+                                  // Toggle off if already selected, otherwise select
+                                  return { ...prev, [category.id]: current === option.id ? '' : option.id };
+                                } else {
+                                  // Multiple selection logic (stored as comma separated string or handling it carefully)
+                                  // For simplicity since the type is string in state, we handle it as array conversion
+                                  const currentArr = current ? current.split(',') : [];
+                                  const newArr = currentArr.includes(option.id) 
+                                    ? currentArr.filter(id => id !== option.id) 
+                                    : [...currentArr, option.id];
+                                  return { ...prev, [category.id]: newArr.join(',') };
+                                }
+                              });
+                            }}
                           >
-                            <span className="flex items-center justify-between w-full min-w-[200px] pr-2">
-                              <span>{option.name}</span>
-                              {option.price > 0 && (
-                                <span className="text-muted-foreground font-medium text-xs ml-4">
-                                  +${option.price.toFixed(2)}
-                                </span>
-                              )}
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                            <div className="flex items-center gap-3.5">
+                              {/* Custom Radio Dot / Checkbox */}
+                              <div 
+                                className={`flex items-center justify-center transition-colors ${
+                                  category.type === 'single' 
+                                    ? `w-5 h-5 rounded-full border-2 ${isSelected ? 'border-primary' : 'border-muted-foreground/30'}`
+                                    : `w-5 h-5 rounded-md border-2 ${isSelected ? 'border-primary bg-primary' : 'border-muted-foreground/30'}`
+                                }`}
+                              >
+                                {isSelected && category.type === 'single' && (
+                                  <div className="w-2.5 h-2.5 rounded-full bg-primary" />
+                                )}
+                                {isSelected && category.type === 'multiple' && (
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-primary-foreground"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                )}
+                              </div>
+                              <span className={`font-medium text-sm ${isSelected ? 'text-primary' : ''}`}>{option.name}</span>
+                            </div>
+                            {option.price > 0 && (
+                              <span className="text-sm font-semibold text-muted-foreground">+${option.price.toFixed(2)}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </AccordionContent>
+                  </AccordionItem>
                 ))}
-              </div>
+              </Accordion>
             </div>
 
             <div className="space-y-4 pt-2 border-t border-border/50">
