@@ -190,12 +190,12 @@ export default function AdminAddonsPage() {
           <p className="text-muted-foreground mt-1">Manage global add-on categories and their options for food items.</p>
         </div>
         
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleLoadDefaults} className="rounded-full shadow-sm">
+        <div className="flex gap-3">
+          <Button variant="outline" size="lg" onClick={handleLoadDefaults} className="rounded-full shadow-sm font-semibold">
             Load Defaults
           </Button>
-          <Button onClick={() => setIsAddCatOpen(true)} className="rounded-full shadow-md">
-            <Plus className="mr-2 h-4 w-4" /> Add Category
+          <Button size="lg" onClick={() => setIsAddCatOpen(true)} className="rounded-full shadow-lg font-bold px-6">
+            <Plus className="mr-2 h-5 w-5" /> Add Category
           </Button>
         </div>
       </div>
@@ -253,33 +253,40 @@ export default function AdminAddonsPage() {
 
       {/* Add Category Dialog */}
       <Dialog open={isAddCatOpen} onOpenChange={setIsAddCatOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-3xl">
-          <DialogHeader>
-            <DialogTitle>Add New Category</DialogTitle>
+        <DialogContent className="sm:max-w-[425px] rounded-3xl p-6 border-0 shadow-2xl bg-card">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-2xl font-bold text-center">Add New Category</DialogTitle>
+            <p className="text-muted-foreground text-center text-sm">Create a new add-on group for your items</p>
           </DialogHeader>
-          <form onSubmit={handleAddCategory} className="space-y-4 pt-4">
+          <form onSubmit={handleAddCategory} className="space-y-5">
             <div className="space-y-2">
-              <Label>Category Name (e.g. Drinks)</Label>
+              <Label className="text-sm font-semibold">Category Name</Label>
               <Input 
                 value={newCatName}
                 onChange={e => setNewCatName(e.target.value)}
-                placeholder="Enter category name"
+                placeholder="e.g. Drinks, Sauces, Extras"
+                className="h-12 rounded-xl bg-muted/30 focus-visible:ring-primary/50"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>Selection Type</Label>
-              <select 
-                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                value={newCatType}
-                onChange={e => setNewCatType(e.target.value)}
-              >
-                <option value="single">Single Choice (Radio)</option>
-                <option value="multiple">Multiple Choice (Checkboxes)</option>
-              </select>
+              <Label className="text-sm font-semibold">Selection Type</Label>
+              <div className="relative">
+                <select 
+                  className="appearance-none flex h-12 w-full items-center justify-between rounded-xl border border-input bg-muted/30 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors"
+                  value={newCatType}
+                  onChange={e => setNewCatType(e.target.value)}
+                >
+                  <option value="single">Single Choice (Customer picks 1)</option>
+                  <option value="multiple">Multiple Choice (Customer picks many)</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
             </div>
-            <Button type="submit" className="w-full rounded-xl" disabled={savingCat}>
-              {savingCat ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Category'}
+            <Button type="submit" className="w-full h-12 rounded-xl font-bold text-base mt-2 shadow-md" disabled={savingCat}>
+              {savingCat ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Save Category'}
             </Button>
           </form>
         </DialogContent>
@@ -287,33 +294,36 @@ export default function AdminAddonsPage() {
 
       {/* Add Option Dialog */}
       <Dialog open={isAddOptionOpen} onOpenChange={setIsAddOptionOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-3xl">
-          <DialogHeader>
-            <DialogTitle>Add Option</DialogTitle>
+        <DialogContent className="sm:max-w-[425px] rounded-3xl p-6 border-0 shadow-2xl bg-card">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-2xl font-bold text-center">Add New Option</DialogTitle>
+            <p className="text-muted-foreground text-center text-sm">Add an item to this category</p>
           </DialogHeader>
-          <form onSubmit={handleAddOption} className="space-y-4 pt-4">
+          <form onSubmit={handleAddOption} className="space-y-5">
             <div className="space-y-2">
-              <Label>Option Name (e.g. Pepsi)</Label>
+              <Label className="text-sm font-semibold">Option Name</Label>
               <Input 
                 value={newOptName}
                 onChange={e => setNewOptName(e.target.value)}
-                placeholder="Enter option name"
+                placeholder="e.g. Pepsi, Extra Cheese"
+                className="h-12 rounded-xl bg-muted/30 focus-visible:ring-primary/50"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>Extra Price ($) - Leave 0 if free</Label>
+              <Label className="text-sm font-semibold">Extra Price ($)</Label>
               <Input 
                 type="number"
                 step="0.01"
                 min="0"
                 value={newOptPrice}
                 onChange={e => setNewOptPrice(e.target.value)}
-                placeholder="0.00"
+                placeholder="0.00 (Leave 0 if free)"
+                className="h-12 rounded-xl bg-muted/30 focus-visible:ring-primary/50"
               />
             </div>
-            <Button type="submit" className="w-full rounded-xl" disabled={savingOpt}>
-              {savingOpt ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Add Option'}
+            <Button type="submit" className="w-full h-12 rounded-xl font-bold text-base mt-2 shadow-md" disabled={savingOpt}>
+              {savingOpt ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Add Option'}
             </Button>
           </form>
         </DialogContent>
