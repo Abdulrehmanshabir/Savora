@@ -134,6 +134,46 @@ export default function AdminAddonsPage() {
     }
   };
 
+  const handleLoadDefaults = async () => {
+    if (!confirm('This will load the default categories (Drinks, Fries, Extras). Proceed?')) return;
+    try {
+      const defaultCats = [
+        {
+          name: "Choose a Drink", type: "single", options: [
+            { id: "pepsi", name: "Pepsi", price: 1.50 },
+            { id: "coke", name: "Coca Cola", price: 1.50 },
+            { id: "sprite", name: "Sprite", price: 1.50 },
+            { id: "fanta", name: "Fanta", price: 1.50 }
+          ]
+        },
+        {
+          name: "Choose Fries", type: "single", options: [
+            { id: "reg_fries", name: "Regular Fries", price: 2.50 },
+            { id: "lrg_fries", name: "Large Fries", price: 3.50 },
+            { id: "curly_fries", name: "Curly Fries", price: 4.00 }
+          ]
+        },
+        {
+          name: "Extra Toppings", type: "multiple", options: [
+            { id: "cheese", name: "Extra Cheese", price: 1.00 },
+            { id: "sauce", name: "Extra Sauce", price: 0.50 },
+            { id: "jalapeno", name: "Jalapenos", price: 0.75 }
+          ]
+        }
+      ];
+      
+      for (const cat of defaultCats) {
+        await addDoc(collection(db, 'addons'), cat);
+      }
+      
+      toast.success('Defaults loaded successfully!');
+      fetchAddons(); // refresh the list
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to load defaults');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -150,9 +190,14 @@ export default function AdminAddonsPage() {
           <p className="text-muted-foreground mt-1">Manage global add-on categories and their options for food items.</p>
         </div>
         
-        <Button onClick={() => setIsAddCatOpen(true)} className="rounded-full shadow-md">
-          <Plus className="mr-2 h-4 w-4" /> Add Category
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleLoadDefaults} className="rounded-full shadow-sm">
+            Load Defaults
+          </Button>
+          <Button onClick={() => setIsAddCatOpen(true)} className="rounded-full shadow-md">
+            <Plus className="mr-2 h-4 w-4" /> Add Category
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
