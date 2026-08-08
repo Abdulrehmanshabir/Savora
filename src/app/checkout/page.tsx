@@ -235,7 +235,12 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-sm line-clamp-1">{item.name}</h4>
-                      <p className="text-xs text-muted-foreground mb-1">Qty: {item.quantity}</p>
+                      {item.addons && item.addons.length > 0 && (
+                        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
+                          + {item.addons.map(a => a.name).join(', ')}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mb-1 mt-0.5">Qty: {item.quantity}</p>
                       <p className="font-bold text-sm text-primary">${(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>

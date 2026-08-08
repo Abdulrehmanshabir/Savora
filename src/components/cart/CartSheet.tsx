@@ -76,7 +76,12 @@ export function CartSheet() {
                     
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-base line-clamp-1">{item.name}</h4>
-                      <p className="font-bold text-primary">${item.price.toFixed(2)}</p>
+                      {item.addons && item.addons.length > 0 && (
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                          + {item.addons.map(a => a.name).join(', ')}
+                        </p>
+                      )}
+                      <p className="font-bold text-primary mt-1">${item.price.toFixed(2)}</p>
                       
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center border border-border rounded-lg bg-background">

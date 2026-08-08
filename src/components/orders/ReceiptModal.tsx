@@ -213,7 +213,12 @@ Thank you for dining with Savora!
                   <div key={item.id || idx} className="py-2.5 flex items-center justify-between text-xs">
                     <div className="flex-1 min-w-0 pr-4">
                       <p className="font-semibold text-foreground truncate">{item.name}</p>
-                      <p className="text-[11px] text-muted-foreground">${item.price.toFixed(2)} each</p>
+                      {item.addons && item.addons.length > 0 && (
+                        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">
+                          + {item.addons.map((a: any) => a.name).join(', ')}
+                        </p>
+                      )}
+                      <p className="text-[11px] text-muted-foreground mt-0.5">${item.price.toFixed(2)} each</p>
                     </div>
                     <div className="flex items-center gap-8 font-medium">
                       <span className="text-muted-foreground">x{item.quantity}</span>

@@ -3,12 +3,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
-export interface CartItem {
+export interface CartItemAddon {
   id: string;
   name: string;
   price: number;
+}
+
+export interface CartItem {
+  id: string; // Unique cart item ID (foodId + addons)
+  foodId: string; // Original food ID
+  name: string;
+  price: number; // Base price + addons price
   image: string;
   quantity: number;
+  addons?: CartItemAddon[];
 }
 
 interface CartContextType {
