@@ -74,10 +74,21 @@ export function FoodCard({ food, globalAddons }: { food: FoodProps, globalAddons
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    const favs = JSON.parse(localStorage.getItem('savora_favorites') || '[]');
-    if (favs.includes(food.id)) {
-      setIsFavorite(true);
-    }
+    const checkFavorite = () => {
+      const favs = JSON.parse(localStorage.getItem('savora_favorites') || '[]');
+      setIsFavorite(favs.includes(food.id));
+    };
+    
+    checkFavorite();
+    window.addEventListener('savora_favorites_changed', checkFavorite);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'savora_favorites') checkFavorite();
+    });
+    
+    return () => {
+      window.removeEventListener('savora_favorites_changed', checkFavorite);
+      window.removeEventListener('storage', checkFavorite);
+    };
   }, [food.id]);
 
   const toggleFavorite = (e: React.MouseEvent) => {
@@ -88,11 +99,13 @@ export function FoodCard({ food, globalAddons }: { food: FoodProps, globalAddons
       localStorage.setItem('savora_favorites', JSON.stringify(newFavs));
       setIsFavorite(false);
       toast.success('Removed from favorites');
+      window.dispatchEvent(new Event('savora_favorites_changed'));
     } else {
       favs.push(food.id);
       localStorage.setItem('savora_favorites', JSON.stringify(favs));
       setIsFavorite(true);
       toast.success('Added to favorites');
+      window.dispatchEvent(new Event('savora_favorites_changed'));
     }
   };
   

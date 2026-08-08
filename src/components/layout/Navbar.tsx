@@ -33,12 +33,18 @@ export default function Navbar() {
   useEffect(() => {
     const updateFavCount = () => {
       const favs = JSON.parse(localStorage.getItem('savora_favorites') || '[]');
-      setFavCount(favs.length);
+      setFavCount(new Set(favs).size);
     };
 
     updateFavCount();
     window.addEventListener('savora_favorites_changed', updateFavCount);
-    return () => window.removeEventListener('savora_favorites_changed', updateFavCount);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'savora_favorites') updateFavCount();
+    });
+    return () => {
+      window.removeEventListener('savora_favorites_changed', updateFavCount);
+      window.removeEventListener('storage', updateFavCount);
+    };
   }, []);
 
   if (pathname.startsWith('/admin')) {
