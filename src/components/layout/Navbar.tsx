@@ -100,8 +100,8 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-3xl font-extrabold text-primary tracking-tight">Savora</span>
+        <Link href="/" className="flex items-center gap-2 shrink-0 mr-1 sm:mr-4">
+          <span className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">Savora</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -118,7 +118,7 @@ export default function Navbar() {
           </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1 sm:gap-4 shrink-0">
           <SearchDialog />
           <Link href="/favorites" className="relative h-10 w-10 flex items-center justify-center rounded-full bg-muted/50 transition-all hover:bg-primary/10 hover:text-primary border border-border/50 shadow-sm">
             <Heart className="h-5 w-5" />
