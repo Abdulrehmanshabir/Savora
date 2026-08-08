@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, ShoppingBag, Calendar, UtensilsCrossed, 
-  LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight, Tag
+  LogOut, Loader2, Star, Settings, Bell, Search, ExternalLink, Menu, ShieldCheck, ChevronRight, Tag, ListPlus
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -56,6 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Menu', href: '/admin/menu', icon: UtensilsCrossed },
+    { name: 'Add-ons', href: '/admin/addons', icon: ListPlus },
     { name: 'Food Orders', href: '/admin/orders', icon: ShoppingBag },
     { name: 'Reservations', href: '/admin/reservations', icon: Calendar },
     { name: 'Reviews', href: '/admin/reviews', icon: Star },

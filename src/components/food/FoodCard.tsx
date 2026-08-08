@@ -60,9 +60,11 @@ const ADDON_CATEGORIES = [
   }
 ];
 
-export function FoodCard({ food }: { food: FoodProps }) {
+export function FoodCard({ food, globalAddons }: { food: FoodProps, globalAddons?: any[] }) {
   const { addToCart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const currentAddons = globalAddons && globalAddons.length > 0 ? globalAddons : ADDON_CATEGORIES;
   
   // Modal State
   const [quantity, setQuantity] = useState(1);
@@ -74,8 +76,8 @@ export function FoodCard({ food }: { food: FoodProps }) {
     .flatMap(val => val.split(',').filter(Boolean))
     .reduce((sum, optionId) => {
       let price = 0;
-      for (const cat of ADDON_CATEGORIES) {
-        const opt = cat.options.find(o => o.id === optionId);
+      for (const cat of currentAddons) {
+        const opt = cat.options?.find((o: any) => o.id === optionId);
         if (opt) price = opt.price;
       }
       return sum + price;
@@ -100,12 +102,12 @@ export function FoodCard({ food }: { food: FoodProps }) {
     
     const cartAddons = allSelectedIds.map(id => {
       let found: any = null;
-      for (const cat of ADDON_CATEGORIES) {
-        const opt = cat.options.find(o => o.id === id);
+      for (const cat of currentAddons) {
+        const opt = cat.options?.find((o: any) => o.id === id);
         if (opt) found = opt;
       }
-      return { id: found.id, name: found.name, price: found.price };
-    });
+      return found ? { id: found.id, name: found.name, price: found.price } : null;
+    }).filter(Boolean) as any[];
 
     addToCart({
       id: cartItemId,
@@ -234,8 +236,8 @@ export function FoodCard({ food }: { food: FoodProps }) {
                 <span className="text-sm text-muted-foreground">Optional</span>
               </div>
               
-              <Accordion defaultValue={["drink"]} className="w-full">
-                {ADDON_CATEGORIES.map(category => (
+              <Accordion defaultValue={currentAddons[0]?.id ? [currentAddons[0].id] : []} className="w-full">
+                {currentAddons.map(category => (
                   <AccordionItem key={category.id} value={category.id} className="border-b-0 mb-4 bg-muted/20 rounded-2xl overflow-hidden border border-border/50">
                     <AccordionTrigger className="px-5 py-4 hover:no-underline hover:bg-muted/30 transition-colors data-[state=open]:border-b border-border/50">
                       <div className="flex flex-col items-start text-left">
@@ -246,7 +248,7 @@ export function FoodCard({ food }: { food: FoodProps }) {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-5 py-4 pb-5 space-y-3 bg-background">
-                      {category.options.map(option => {
+                      {category.options && category.options.map((option: any) => {
                         const currentSelections = selectedAddons[category.id] || '';
                         const isSelected = currentSelections.includes(option.id);
                         

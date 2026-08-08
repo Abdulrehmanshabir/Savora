@@ -16,20 +16,24 @@ function MenuContent() {
 
   const [foods, setFoods] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [addons, setAddons] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchMenu() {
       try {
-        const [foodsSnap, categoriesSnap] = await Promise.all([
+        const [foodsSnap, categoriesSnap, addonsSnap] = await Promise.all([
           getDocs(collection(db, 'foods')),
-          getDocs(collection(db, 'categories'))
+          getDocs(collection(db, 'categories')),
+          getDocs(collection(db, 'addons'))
         ]);
         
         let fetchedFoods: any[] = foodsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
         const fetchedCats: any[] = categoriesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+        const fetchedAddons: any[] = addonsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
 
         setCategories(fetchedCats);
+        setAddons(fetchedAddons);
 
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
@@ -89,7 +93,7 @@ function MenuContent() {
           ) : foods.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
               {foods.map((food: any) => (
-                <FoodCard key={food.id} food={food} />
+                <FoodCard key={food.id} food={food} globalAddons={addons} />
               ))}
             </div>
           ) : (
