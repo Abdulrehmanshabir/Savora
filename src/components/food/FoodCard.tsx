@@ -206,7 +206,7 @@ export function FoodCard({ food, globalAddons }: { food: FoodProps, globalAddons
       </Card>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-[2rem] gap-0">
+        <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-[2rem] gap-0 [&>button]:hidden">
           <div className="relative h-48 w-full">
             <Image
               src={food.image || (food.images && food.images.length > 0 ? food.images[0] : null) || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'}
