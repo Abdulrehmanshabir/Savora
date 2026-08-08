@@ -163,101 +163,98 @@ export default function AdminReviewsPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-[2rem] border border-border/50 shadow-sm overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredReviews.length === 0 ? (
-          <div className="p-12 text-center flex flex-col items-center justify-center text-muted-foreground">
+          <div className="col-span-full p-12 text-center flex flex-col items-center justify-center text-muted-foreground bg-card rounded-[2rem] border border-border/50 shadow-sm">
             <Star className="h-12 w-12 mb-4 opacity-20" />
             <p className="text-lg font-medium">No reviews found</p>
             <p className="text-sm">When customers leave reviews, they will appear here.</p>
           </div>
         ) : (
-          <table className="w-full text-sm text-left">
-            <thead className="bg-muted/50 text-muted-foreground font-semibold uppercase tracking-wider text-xs border-b border-border/50">
-              <tr>
-                <th className="px-6 py-4">Customer</th>
-                <th className="px-6 py-4">Rating & Review</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {filteredReviews.map((review) => {
-                const date = review.createdAt ? new Date(review.createdAt.toMillis()).toLocaleDateString() : 'Unknown';
-                const isHidden = review.status === 'hidden';
+          filteredReviews.map((review) => {
+            const date = review.createdAt ? new Date(review.createdAt.toMillis()).toLocaleDateString() : 'Unknown';
+            const isHidden = review.status === 'hidden';
+            
+            return (
+              <div key={review.id} className={`bg-card rounded-3xl border border-border/50 shadow-sm overflow-hidden flex flex-col transition-all hover:shadow-md ${isHidden ? 'opacity-70 bg-muted/30' : ''}`}>
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg shrink-0">
+                        {review.userName?.charAt(0).toUpperCase() || 'C'}
+                      </div>
+                      <div>
+                        <p className="font-bold text-base leading-tight line-clamp-1">{review.userName || 'Anonymous'}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{date}</p>
+                      </div>
+                    </div>
+                    {review.itemId === 'restaurant' ? (
+                      <Badge className="bg-primary/20 text-primary border-primary/30 shrink-0">Restaurant</Badge>
+                    ) : (
+                      <Badge variant="outline" className="border-secondary/50 text-secondary bg-secondary/10 shrink-0">Food Item</Badge>
+                    )}
+                  </div>
+                  
+                  {review.itemId !== 'restaurant' && (
+                    <p className="text-xs font-semibold text-foreground/80 mb-3 bg-muted/50 w-fit px-2 py-1 rounded-md">Item: {review.itemName}</p>
+                  )}
+                  
+                  <div className="mb-3">
+                    {renderStars(review.rating)}
+                  </div>
+                  
+                  <p className="text-foreground/90 text-sm italic relative leading-relaxed mb-4">
+                    "{review.comment}"
+                  </p>
+                  
+                  {review.adminResponse && (
+                    <div className="mt-auto p-3 bg-primary/5 rounded-xl border border-primary/10">
+                      <p className="text-xs font-bold text-primary mb-1">Your Response:</p>
+                      <p className="text-sm text-foreground/80">{review.adminResponse}</p>
+                    </div>
+                  )}
+                </div>
                 
-                return (
-                  <tr key={review.id} className={`hover:bg-muted/20 transition-colors ${isHidden ? 'opacity-60' : ''}`}>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                          {review.userName?.charAt(0).toUpperCase() || 'C'}
-                        </div>
-                        <div>
-                          <p className="font-bold">{review.userName || 'Anonymous'}</p>
-                          <p className="text-xs text-muted-foreground">{review.userEmail}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 max-w-xs">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 mb-1">
-                          {review.itemId === 'restaurant' ? (
-                            <Badge className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">Overall Restaurant</Badge>
-                          ) : (
-                            <Badge variant="outline" className="border-secondary/50 text-secondary bg-secondary/10">Food Item: {review.itemName}</Badge>
-                          )}
-                        </div>
-                        {renderStars(review.rating)}
-                        <p className="text-muted-foreground line-clamp-2 mt-1 italic text-sm">"{review.comment}"</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-muted-foreground font-medium">
-                      {date}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        isHidden ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'
-                      }`}>
-                        {isHidden ? 'Hidden' : 'Published'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleOpenReply(review)}
-                          title="Reply to Review"
-                          className="hover:bg-primary/10 hover:text-primary"
-                        >
-                          <MessageCircle className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => toggleReviewVisibility(review.id, review.status)}
-                          title={isHidden ? "Publish Review" : "Hide Review"}
-                          className="hover:bg-primary/10 hover:text-primary"
-                        >
-                          {isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-destructive hover:bg-destructive/10 hover:text-destructive" 
-                          onClick={() => handleDelete(review.id)}
-                          title="Delete Review"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                <div className="p-4 border-t border-border/50 bg-muted/10 flex items-center justify-between">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    isHidden ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'
+                  }`}>
+                    {isHidden ? 'Hidden' : 'Published'}
+                  </span>
+                  
+                  <div className="flex items-center gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => handleOpenReply(review)}
+                      title="Reply to Review"
+                      className="hover:bg-primary/10 hover:text-primary h-9 w-9 rounded-full"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => toggleReviewVisibility(review.id, review.status)}
+                      title={isHidden ? "Publish Review" : "Hide Review"}
+                      className="hover:bg-primary/10 hover:text-primary h-9 w-9 rounded-full"
+                    >
+                      {isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="text-destructive hover:bg-destructive/10 hover:text-destructive h-9 w-9 rounded-full" 
+                      onClick={() => handleDelete(review.id)}
+                      title="Delete Review"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
         )}
       </div>
 
