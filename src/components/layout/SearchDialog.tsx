@@ -56,7 +56,7 @@ export function SearchDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="hidden sm:inline-flex shrink-0 items-center justify-center rounded-full bg-muted/50 font-medium transition-all hover:bg-primary/10 hover:text-primary h-10 w-10 shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 border border-border/50" aria-label="Search">
+      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-full bg-muted/50 font-medium transition-all hover:bg-primary/10 hover:text-primary h-10 w-10 shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 border border-border/50" aria-label="Search">
         <Search className="h-5 w-5" />
       </DialogTrigger>
       
