@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // We rely on Webpack/Turbopack to bundle firebase-admin and its dependencies 
-  // into a format compatible with Serverless functions.
-  // serverExternalPackages: [],
+  // Bundle configurations removed as firebase-admin v11 works natively
   images: {
     remotePatterns: [
       {
