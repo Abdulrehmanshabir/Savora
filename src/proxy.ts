@@ -5,6 +5,11 @@ export function proxy(request: NextRequest) {
   const session = request.cookies.get('session');
   const path = request.nextUrl.pathname;
 
+  // Explicitly bypass proxy for API routes
+  if (path.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
   const isAuthPage = path === '/login' || path === '/signup';
 
   // If user is NOT logged in and trying to access any page other than login/signup
