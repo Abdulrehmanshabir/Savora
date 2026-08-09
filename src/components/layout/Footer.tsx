@@ -50,9 +50,9 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>123 Culinary Blvd</li>
-              <li>Food City, FC 90210</li>
-              <li>+1 (555) 123-4567</li>
+              <li>xxxx</li>
+              <li>xxxx</li>
+              <li>xxxx</li>
               <li>hello@savora.com</li>
             </ul>
           </div>
