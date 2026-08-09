@@ -6,7 +6,7 @@ export async function getAuthenticatedUser() {
   const sessionToken = cookieStore.get('session')?.value;
 
   if (!sessionToken) {
-    return null;
+    throw new Error('Auth Error: Session cookie is missing');
   }
 
   try {
@@ -22,8 +22,8 @@ export async function getAuthenticatedUser() {
       email: decodedToken.email,
       role: userData?.role || 'customer'
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error verifying token:', error);
-    return null;
+    throw new Error(`Auth Error: ${error.message}`);
   }
 }
