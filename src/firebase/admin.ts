@@ -1,24 +1,22 @@
 import 'server-only';
 
-// Use dynamic import() so Turbopack never statically bundles firebase-admin.
-// This lets Node.js load jose (pure ESM) correctly at runtime.
-// Static require() of jose fails because Turbopack's CJS runtime cannot require() ESM modules.
+import { getApps, initializeApp, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
+import { getStorage } from 'firebase-admin/storage';
+import type { Auth } from 'firebase-admin/auth';
+import type { Storage } from 'firebase-admin/storage';
 
 type AdminInstances = {
   adminDb: FirebaseFirestore.Firestore;
-  adminAuth: import('firebase-admin/auth').Auth;
-  adminStorage: import('firebase-admin/storage').Storage;
+  adminAuth: Auth;
+  adminStorage: Storage;
 };
 
 // Singleton promise — initializes once, reused on every call
 let instancesPromise: Promise<AdminInstances> | null = null;
 
 async function initializeAdmin(): Promise<AdminInstances> {
-  const { initializeApp, getApps, cert } = await import('firebase-admin/app');
-  const { getFirestore } = await import('firebase-admin/firestore');
-  const { getAuth } = await import('firebase-admin/auth');
-  const { getStorage } = await import('firebase-admin/storage');
-
   if (!getApps().length) {
     const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY
       ? process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n').replace(/"/g, '')
