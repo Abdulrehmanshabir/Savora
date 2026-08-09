@@ -6,14 +6,11 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ChevronLeft, CheckCircle2, MapPin, Phone, User, Loader2 } from 'lucide-react';
+import { MapPin, CreditCard, Clock, ChevronLeft, CheckCircle2, ShoppingBag, Loader2, Info, Phone, User } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { db } from '@/firebase/client';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'sonner';
-import { sendNotification, sendAdminNotification } from '@/lib/notifications';
 
 const checkoutSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -55,48 +52,29 @@ export default function CheckoutPage() {
     try {
       setIsSubmitting(true);
       
-      const orderData = {
-        userId: user.uid,
-        items: items.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          image: item.image
-        })),
-        totalAmount: totalPrice,
-        status: 'pending',
-        contactInfo: {
-          fullName: data.fullName,
-          phone: data.phone,
-          email: user.email,
-        },
-        deliveryAddress: {
-          address: data.address,
-          city: data.city,
-        },
-        specialInstructions: data.instructions || '',
-        createdAt: serverTimestamp(),
+      // Prepare data for API
+      const orderPayload = {
+        customerInfo: data,
+        items: items,
+        paymentMethod: 'cod', // Default or from state
+        orderNotes: data.instructions || ''
       };
 
-      const docRef = await addDoc(collection(db, 'orders'), orderData);
-      
-      await sendNotification({
-        userId: user.uid,
-        title: 'Order Placed Successfully! 🛍️',
-        message: `Your order #${docRef.id.slice(0, 6).toUpperCase()} of $${totalPrice.toFixed(2)} has been placed. We're getting it ready!`,
-        type: 'order',
-        link: '/dashboard?tab=orders',
-        metadata: { orderId: docRef.id, amount: totalPrice }
+      // Call Secure Backend API
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderPayload),
       });
 
-      await sendAdminNotification({
-        title: 'New Order Received! 🛍️',
-        message: `${data.fullName} placed order #${docRef.id.slice(0, 6).toUpperCase()} for $${totalPrice.toFixed(2)} (${items.length} items)`,
-        type: 'order',
-        link: '/admin/orders',
-        metadata: { orderId: docRef.id, totalAmount: totalPrice, customerName: data.fullName }
-      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to process order');
+      }
+
+      // API handles creating order, notifications, and security validation
 
       clearCart();
       setOrderSuccess(true);
