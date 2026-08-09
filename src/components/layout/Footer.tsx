@@ -50,10 +50,10 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>xxxx</li>
-              <li>xxxx</li>
-              <li>xxxx</li>
-              <li>hello@savora.com</li>
+              <li>Address: xxxx</li>
+              <li>City: xxxx</li>
+              <li>Phone: xxxx</li>
+              <li>Email: hello@savora.com</li>
             </ul>
           </div>
 
