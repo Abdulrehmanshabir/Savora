@@ -129,13 +129,12 @@ function LoginForm() {
                 <Label htmlFor="password" className="text-xs font-bold text-foreground/80">
                   Password
                 </Label>
-                <button 
-                  type="button"
-                  onClick={() => router.push('/forgot-password')} 
-                  className="relative z-20 text-xs font-semibold text-primary hover:underline cursor-pointer px-2 py-1 -mr-2 rounded-md hover:bg-primary/5"
+                <a 
+                  href="/forgot-password"
+                  className="relative z-20 text-xs font-semibold text-primary hover:underline cursor-pointer px-2 py-1 -mr-2 rounded-md hover:bg-primary/5 inline-block"
                 >
                   Forgot password?
-                </button>
+                </a>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
