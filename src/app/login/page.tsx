@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import { Mail, Lock, Eye, EyeOff, Loader2, Sparkles, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 function GoogleIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -42,10 +43,34 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  
+  // Forgot Password State
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [resetSubmitted, setResetSubmitted] = useState(false);
+
   const { signInWithGoogle } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTarget = searchParams?.get('redirect') || '/';
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success('Password reset email sent!');
+      setResetSubmitted(true);
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || 'Failed to send reset email. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,14 +123,88 @@ function LoginForm() {
             <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mx-auto mb-4 shadow-md shadow-primary/10">
               <Sparkles className="h-7 w-7" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">Welcome Back</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              {isForgotPassword ? 'Forgot Password' : 'Welcome Back'}
+            </h1>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1.5">
-              Sign in to manage orders, reservations & profile
+              {isForgotPassword 
+                ? (resetSubmitted ? "Check your email for the reset link!" : "Enter your email and we'll send you a link to reset your password.")
+                : "Sign in to manage orders, reservations & profile"}
             </p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          {/* Dynamic Form Content */}
+          {isForgotPassword ? (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              {!resetSubmitted ? (
+                <form onSubmit={handleResetPassword} className="space-y-4">
+                  <div className="space-y-1.5 text-left">
+                    <Label htmlFor="reset-email" className="text-xs font-bold text-foreground/80">
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                      <input
+                        id="reset-email"
+                        type="email"
+                        placeholder="name@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full h-12 pl-10 pr-4 rounded-xl border border-border/80 bg-background/80 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-sm shadow-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 text-sm sm:text-base font-bold rounded-xl bg-gradient-to-r from-primary via-orange-500 to-amber-500 hover:from-primary/90 hover:to-amber-600 text-white shadow-lg shadow-primary/25 transition-all hover:shadow-primary/35 active:scale-[0.99] cursor-pointer mt-4" 
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" /> Sending Link...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <span>Send Reset Link</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </span>
+                    )}
+                  </Button>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  <Button 
+                    type="button" 
+                    onClick={() => { setIsForgotPassword(false); setResetSubmitted(false); }}
+                    className="w-full h-12 text-sm sm:text-base font-bold rounded-xl bg-gradient-to-r from-primary via-orange-500 to-amber-500 hover:from-primary/90 hover:to-amber-600 text-white shadow-lg shadow-primary/25 transition-all hover:shadow-primary/35 cursor-pointer mt-2"
+                  >
+                    Back to Login
+                  </Button>
+                  <p className="text-center text-xs text-muted-foreground mt-4">
+                    Didn't receive the email?{' '}
+                    <button 
+                      onClick={() => setResetSubmitted(false)}
+                      className="font-semibold text-primary hover:underline cursor-pointer"
+                    >
+                      Try again
+                    </button>
+                  </p>
+                </div>
+              )}
+              <div className="mt-8 text-center">
+                <button 
+                  onClick={() => setIsForgotPassword(false)}
+                  className="inline-flex items-center justify-center gap-2 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back to Login
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+              <form onSubmit={handleEmailLogin} className="space-y-4">
             <div className="space-y-1.5 text-left">
               <Label htmlFor="email" className="text-xs font-bold text-foreground/80">
                 Email Address
@@ -129,12 +228,13 @@ function LoginForm() {
                 <Label htmlFor="password" className="text-xs font-bold text-foreground/80">
                   Password
                 </Label>
-                <a 
-                  href="/forgot-password"
+                <button 
+                  type="button"
+                  onClick={() => setIsForgotPassword(true)}
                   className="relative z-20 text-xs font-semibold text-primary hover:underline cursor-pointer px-2 py-1 -mr-2 rounded-md hover:bg-primary/5 inline-block"
                 >
                   Forgot password?
-                </a>
+                </button>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -186,7 +286,6 @@ function LoginForm() {
             </div>
           </div>
 
-          {/* Google Login */}
           <Button 
             type="button" 
             variant="outline" 
@@ -203,6 +302,8 @@ function LoginForm() {
               </>
             )}
           </Button>
+          </div>
+          )}
 
           {/* Footer */}
           <div className="mt-8 text-center pt-5 border-t border-border/40">
