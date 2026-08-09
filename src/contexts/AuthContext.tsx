@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '@/firebase/client';
 import { 
   User as FirebaseUser, 
-  onAuthStateChanged, 
+  onIdTokenChanged, 
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut as firebaseSignOut 
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // Sync user to Firestore
         const userRef = doc(db, 'users', firebaseUser.uid);

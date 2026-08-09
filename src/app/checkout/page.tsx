@@ -79,9 +79,9 @@ export default function CheckoutPage() {
       clearCart();
       setOrderSuccess(true);
       toast.success('Order placed successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Checkout error:', error);
-      toast.error('Failed to place order. Please try again.');
+      toast.error(error.message || 'Failed to place order. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

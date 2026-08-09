@@ -35,11 +35,11 @@ export async function POST(request: Request) {
 
       // Verify Add-ons
       const validatedAddons = [];
-      if (item.selectedAddons && item.selectedAddons.length > 0) {
+      if (item.addons && item.addons.length > 0) {
         // Ideally we would fetch the exact add-on price from a master list,
         // but for now we assume the client passed the correct add-on price if it matches menu definition or global add-ons
         // In a full production app, you'd strictly validate this against a database of add-ons
-        for (const addon of item.selectedAddons) {
+        for (const addon of item.addons) {
           itemTotal += addon.price;
           validatedAddons.push(addon);
         }
