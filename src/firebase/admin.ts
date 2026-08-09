@@ -16,14 +16,17 @@ async function initializeAdmin(): Promise<AdminInstances> {
       ? process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n').replace(/"/g, '')
       : undefined;
 
-    if (!process.env.FIREBASE_ADMIN_PROJECT_ID || !process.env.FIREBASE_ADMIN_CLIENT_EMAIL || !privateKey) {
+    const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID?.replace(/"/g, '');
+    const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL?.replace(/"/g, '');
+    
+    if (!projectId || !clientEmail || !privateKey) {
       console.error('❌ Firebase Admin env variables missing! Check Vercel environment settings.');
     } else {
       try {
         admin.initializeApp({
           credential: admin.credential.cert({
-            projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-            clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+            projectId,
+            clientEmail,
             privateKey,
           }),
           storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
