@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
     for (const item of items) {
       const documentId = item.foodId || item.id;
-      const menuDoc = await adminDb.collection('menu').doc(documentId).get();
+      const menuDoc = await adminDb.collection('foods').doc(documentId).get();
       if (!menuDoc.exists) {
         return NextResponse.json({ error: `Item ${item.name} not found in menu` }, { status: 400 });
       }
