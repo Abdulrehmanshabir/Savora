@@ -24,7 +24,8 @@ export async function POST(request: Request) {
     const validatedItems = [];
 
     for (const item of items) {
-      const menuDoc = await adminDb.collection('menu').doc(item.id).get();
+      const documentId = item.foodId || item.id;
+      const menuDoc = await adminDb.collection('menu').doc(documentId).get();
       if (!menuDoc.exists) {
         return NextResponse.json({ error: `Item ${item.name} not found in menu` }, { status: 400 });
       }
