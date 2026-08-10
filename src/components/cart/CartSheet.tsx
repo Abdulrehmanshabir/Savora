@@ -21,17 +21,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 
 export function CartSheet() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { items, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
+  const { items, updateQuantity, removeFromCart, totalItems, totalPrice, isCartOpen, setIsCartOpen } = useCart();
   const router = useRouter();
 
   const handleCheckout = () => {
-    setIsOpen(false);
+    setIsCartOpen(false);
     router.push('/checkout');
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
       <SheetTrigger className="relative h-10 w-10 flex items-center justify-center rounded-full bg-muted/50 transition-all hover:bg-primary/10 hover:text-primary border border-border/50 shadow-sm">
         <ShoppingCart className="h-5 w-5" />
         {totalItems > 0 && (

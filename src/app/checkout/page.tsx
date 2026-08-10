@@ -23,7 +23,7 @@ const checkoutSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
 export default function CheckoutPage() {
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice, clearCart, setIsCartOpen } = useCart();
   const { user } = useAuth();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,16 +118,21 @@ export default function CheckoutPage() {
 
   if (items.length === 0) return null; // Prevent flicker before redirect
 
+  const handleBackToCart = () => {
+    setIsCartOpen(true);
+    router.back();
+  };
+
   return (
     <div className="min-h-[100dvh] bg-muted/30 pt-8 pb-20">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="mb-6">
           <button 
-            onClick={() => router.back()} 
+            onClick={handleBackToCart} 
             className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors"
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
-            Back
+            Back to Cart
           </button>
         </div>
 
