@@ -29,7 +29,7 @@ interface FoodProps {
   isPopular?: boolean;
 }
 
-const ADDON_CATEGORIES = [
+export const ADDON_CATEGORIES = [
   {
     id: 'drink',
     name: 'Choose a Drink',

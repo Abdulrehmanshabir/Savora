@@ -24,6 +24,7 @@ interface CartContextType {
   addToCart: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  updateCartItem: (oldId: string, newId: string, newPrice: number, newAddons: CartItemAddon[]) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -34,6 +35,7 @@ const defaultCartContext: CartContextType = {
   addToCart: () => {},
   removeFromCart: () => {},
   updateQuantity: () => {},
+  updateCartItem: () => {},
   clearCart: () => {},
   totalItems: 0,
   totalPrice: 0,
@@ -107,6 +109,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const updateCartItem = (oldId: string, newId: string, newPrice: number, newAddons: CartItemAddon[]) => {
+    setItems(currentItems => {
+      const oldItem = currentItems.find(i => i.id === oldId);
+      if (!oldItem) return currentItems;
+      
+      const existingItem = currentItems.find(i => i.id === newId && i.id !== oldId);
+      let newItems = currentItems.filter(i => i.id !== oldId);
+      
+      if (existingItem) {
+        return newItems.map(i => i.id === newId ? { ...i, quantity: i.quantity + oldItem.quantity } : i);
+      } else {
+        newItems.push({
+          ...oldItem,
+          id: newId,
+          price: newPrice,
+          addons: newAddons
+        });
+        return newItems;
+      }
+    });
+    
+    toast.success('Cart updated successfully');
+  };
+
   const clearCart = () => {
     setItems([]);
   };
@@ -120,6 +146,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       addToCart,
       removeFromCart,
       updateQuantity,
+      updateCartItem,
       clearCart,
       totalItems,
       totalPrice

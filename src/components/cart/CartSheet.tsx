@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ShoppingCart, Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { EditCartItemModal } from './EditCartItemModal';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -105,14 +106,17 @@ export function CartSheet() {
                           </Button>
                         </div>
                         
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center">
+                          <EditCartItemModal item={item} />
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
