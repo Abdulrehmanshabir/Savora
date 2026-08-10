@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { X, Edit2 } from 'lucide-react';
 import Image from 'next/image';
@@ -78,18 +78,18 @@ export function EditCartItemModal({ item }: { item: CartItem }) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 mr-1"
-        >
-          <Edit2 className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
+    <>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 mr-1"
+        onClick={() => handleOpenChange(true)}
+      >
+        <Edit2 className="h-4 w-4" />
+      </Button>
       
-      <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-[2rem] gap-0 [&>button]:hidden">
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-[2rem] gap-0 [&>button]:hidden">
         <div className="relative h-40 w-full">
           <Image
             src={item.image}
@@ -194,6 +194,7 @@ export function EditCartItemModal({ item }: { item: CartItem }) {
           </Button>
         </div>
       </DialogContent>
-    </Dialog>
+      </Dialog>
+    </>
   );
 }
